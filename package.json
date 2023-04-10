@@ -1,0 +1,12 @@
+{
+  "name": "headless-links",
+  "version": "1.0.0",
+  "description": "Get all the links from a page",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Peter G <petegq@gmail.com>",
+  "license": "MIT"
+}
