@@ -49,13 +49,20 @@ async function runApp() {
       })
     );
 
+    const internalLinks = linkURLs.filter(
+      (url) => url && url.includes(`${site}.`)
+    );
+
+    console.log("Internal:", internalLinks.length);
+    console.log(internalLinks);
+
     // Filter out internal links and display external links
     const externalLinks = linkURLs.filter(
       (url) =>
         url &&
         !url.startsWith("#") &&
         !url.startsWith("/") &&
-        !url.includes(`.${site}.`)
+        !url.includes(`${site}.`)
     );
 
     console.log("External:", externalLinks.length);
