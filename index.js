@@ -50,7 +50,9 @@ async function runApp() {
     );
 
     const internalLinks = linkURLs.filter(
-      (url) => url && url.includes(`${site}.`)
+      (url) =>
+        url &&
+        (url.startsWith("#") || url.startsWith("/") || url.includes(`${site}.`))
     );
 
     console.log("Internal:", internalLinks.length);
