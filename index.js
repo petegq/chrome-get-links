@@ -19,7 +19,9 @@ async function runApp() {
   await Promise.all([Page.enable(), Runtime.enable(), DOM.enable()]);
 
   // Open a new tab and navigate to the specified URL
-  await Page.navigate({ url: "https://google" });
+  const site = "google";
+  const tld = "com";
+  await Page.navigate({ url: `https://${site}.${tld}` });
 
   // Wait for the page to finish loading
   Page.loadEventFired(async () => {
@@ -37,20 +39,28 @@ async function runApp() {
     // Extract the href attribute of each link
     const linkURLs = await Promise.all(
       linkNodes.nodeIds.map(async (nodeId) => {
-        const { attributes } = await DOM.describeNode({ nodeId });
-        if (attributes) {
-          const hrefIndex = attributes.indexOf("href");
-          return hrefIndex !== -1 ? attributes[hrefIndex + 1] : null;
+        const node = await DOM.describeNode({ nodeId });
+        const attribs = node.node.attributes;
+        if (attribs) {
+          const hrefIndex = attribs.indexOf("href");
+          return hrefIndex !== -1 ? attribs[hrefIndex + 1] : null;
         }
         return null;
       })
     );
 
     // Filter out internal links and display external links
-    const externalLinks = linkURLs.filter((url) => url && !url.startsWith("/"));
-    console.log("External links found on the page:", externalLinks.length);
+    const externalLinks = linkURLs.filter(
+      (url) =>
+        url &&
+        !url.startsWith("#") &&
+        !url.startsWith("/") &&
+        !url.includes(`.${site}.`)
+    );
 
-    // Close the client and the Chrome instance
+    console.log("External:", externalLinks.length);
+    console.log(externalLinks);
+
     await client.close();
     await chrome.kill();
   });
